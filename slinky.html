@@ -1,7 +1,7 @@
 <html>
 <body>
 <canvas id = "gameCanvas" width = "800" height = "600"></canvas>
-<script type = "text/javascript" src = "../engine.js"></script>
+<script type = "text/javascript" src = "./engine.js"></script>
 <script type = "text/javascript">
 
 "use strict";
@@ -17,7 +17,7 @@ var canvas = document.getElementById('gameCanvas'),
 
 var slinky,
     g = 9.81,
-    springConst = 10,
+    springConst = 50,
     dampingConst = 5,
     drag = 0.01;
 
@@ -107,26 +107,26 @@ class Slinky{
             var obj = new Link(this.x + (this.initSpacing * i), this.y, this.linkMass, this.linkRadius, false, 'red');
             this.links.push(obj);
         }
-        this.links[0].pinned = true;
-        this.links[this.length - 1].pinned = true;
+        this.links[0].pinned = false;
+        this.links[this.length - 1].pinned = false;
         this.hangTime = 5000;
         this.beginHang = Date.now();
         this.dropped = false;
     }
     update(dt){
-        if (this.links[0].pinned && mouseX != undefined && mouseY != undefined){
+        if (mouseX != undefined && mouseY != undefined){
             this.links[0].x = mouseX;
             this.links[0].y = mouseY;
         }
-
+        
         // top link
         var springForce, springForceCont;
         //springForceCont = getSpringForce(this.links[0].x, this.links[0].y, this.links[1].x, this.links[1].y, this.springConst);
         springForceCont = getSpringDamperForce(this.links[0].x, this.links[0].y, this.links[1].x, this.links[1].y, this.links[0].velX, this.links[0].velY, this.links[1].velX, this.links[1].velY, dampingConst, this.initSpacing, this.springConst);
         springForce = springForceCont;
-        this.links[0].update(springForce, dt);
+        //this.links[0].update(springForce, dt);
 
-
+        
         for (var i = 1; i < this.length - 1; i++){
             var thisLink = this.links[i];
 
@@ -147,6 +147,9 @@ class Slinky{
         springForce.y = -1 * springForceCont.y;
         this.links[this.length - 1].update(springForce, dt);
 
+    }
+    getEndNode(){
+        return this.links[this.length - 1];
     }
 }
 
