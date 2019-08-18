@@ -1,97 +1,3 @@
-<html>
-<body>
-<canvas id = "gameCanvas" width = "800" height = "600"></canvas>
-<script type = "text/javascript" src = "./engine.js"></script>
-<script type = "text/javascript">
-
-"use strict";
-
-//Base//
-var canvas = document.getElementById('gameCanvas'),
-	canvasContext,
-	lastFrame = new Date(),
-	currentFrame,
-	dt,
-	mouseX,
-	mouseY;
-
-var slinky,
-    g = 9.81,
-    springConst = 50,
-    dampingConst = 5,
-    drag = 0.01;
-
-window.onload = function(){
-	canvasContext = canvas.getContext('2d');
-	canvas.addEventListener("mousemove", getMousePosition, false);
-    canvas.addEventListener("click", handleLeftClick, false);
-	init();
-
-}
-
-function init(){
-	//Initialize stuff
-    slinky = new Slinky(canvas.width / 4, 50, 20, 1, 10, 10, springConst);
-	//Enter main game loop
-	main();
-}
-
-function main(){
-	//Main loop
-
-	//Time calculations
-	currentFrame = new Date();
-	dt = (currentFrame - lastFrame)/1000.0;
-	lastFrame = currentFrame;
-	
-	//Updates
-	update(dt);
-	draw(dt);
-
-	requestAnimationFrame(main);
-}
-
-
-function draw(dt){
-	drawBackground();
-    drawSlinky();
-}
-
-function drawBackground(){
-	canvasContext.fillStyle = 'Black';
-	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function drawCircle(circle){
-	canvasContext.fillStyle = circle.color;
-	canvasContext.beginPath();
-	canvasContext.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
-	canvasContext.fill();
-
-}
-
-function drawSlinky(){
-    for (var i = 0; i < slinky.length; i++){
-        drawCircle(slinky.links[i]);
-    }
-}
-
-function update(dt){
-    slinky.update(dt);
-}
-
-
-function getMousePosition(e){
-	var rect = canvas.getBoundingClientRect(),
-        root = document.documentElement;
-
-	mouseX = e.pageX - rect.left - root.scrollLeft;
-	mouseY = e.pageY - rect.top - root.scrollTop;
-}
-function handleLeftClick(e){
-    slinky.links[0].pinned = false;
-}
-
 class Slinky{
     constructor(x, y, length, linkMass, linkRadius, initSpacing, springConst){
         this.x = x;
@@ -102,7 +8,7 @@ class Slinky{
         this.initSpacing = initSpacing;
         this.springConst = springConst;
         this.links = [];
-        
+
         for (var i = 0; i < this.length; i++){
             var obj = new Link(this.x + (this.initSpacing * i), this.y, this.linkMass, this.linkRadius, false, 'red');
             this.links.push(obj);
@@ -118,7 +24,7 @@ class Slinky{
             this.links[0].x = mouseX;
             this.links[0].y = mouseY;
         }
-        
+
         // top link
         var springForce, springForceCont;
         //springForceCont = getSpringForce(this.links[0].x, this.links[0].y, this.links[1].x, this.links[1].y, this.springConst);
@@ -126,7 +32,7 @@ class Slinky{
         springForce = springForceCont;
         //this.links[0].update(springForce, dt);
 
-        
+
         for (var i = 1; i < this.length - 1; i++){
             var thisLink = this.links[i];
 
@@ -141,7 +47,7 @@ class Slinky{
 
             thisLink.update(springForce, dt);
         }
-        
+
         //use negative of last used spring force.
         springForce.x = -1 * springForceCont.x;
         springForce.y = -1 * springForceCont.y;
@@ -182,7 +88,3 @@ class Link{
 
 
 }
-
-</script>
-</body>
-</html>

@@ -15,12 +15,10 @@ class Camera{
 			this.trackedObject = obj;
 			return;
 		}
-		throw new Error()
+		throwError(this, `Invalid object, ${obj.constructor.name} to track!`);
 	}
 	stopTracking(){
 
 	}
 
 }
-
-
