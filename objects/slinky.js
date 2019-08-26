@@ -57,6 +57,14 @@ class Slinky{
     getEndNode(){
         return this.links[this.length - 1];
     }
+    releaseEndNode(){
+        var endNode, projectile;
+        endNode = this.links.pop();
+        console.log(endNode);
+        this.length -= 1;
+        projectile = addGameObject(new SlinkyProjectile(endNode));
+        return endNode;
+    }
 }
 
 class Link{

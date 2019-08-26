@@ -13,7 +13,8 @@ var slinky,
     g = 9.81,
     springConst = 50,
     dampingConst = 5,
-    drag = 0.01;
+    drag = 0.01,
+	gameObjects = {};
 
 window.onload = function(){
     canvas = document.getElementById('gameCanvas')
@@ -31,7 +32,7 @@ function init(){
 
 	//Initialize game objects
     slinky = new Slinky(canvas.width / 4, 50, 20, 1, 10, 10, springConst);
-
+	//addGameObject(slinky);
     //Enter main game loop
 	main();
 }
@@ -55,6 +56,7 @@ function main(){
 function draw(dt){
 	drawBackground();
     drawSlinky();
+	drawGameObjects();
 }
 
 function drawBackground(){
@@ -62,20 +64,31 @@ function drawBackground(){
 	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function drawCircle(circle){
-	canvasContext.fillStyle = circle.color;
+function drawCircle(color, x, y, radius){
+	canvasContext.fillStyle = color;
 	canvasContext.beginPath();
-	canvasContext.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI);
+	canvasContext.arc(x, y, radius, 0, 2 * Math.PI);
 	canvasContext.fill();
 
 }
 
 function drawSlinky(){
     for (var i = 0; i < slinky.length; i++){
-        drawCircle(slinky.links[i]);
+		var link = slinky.links[i];
+        drawCircle(link.color, link.x, link.y, link.radius);
     }
+}
+
+function drawGameObjects(){
+	for (var id in gameObjects){
+		var obj = gameObjects[id];
+		drawCircle(obj.color, obj.x, obj.y, obj.radius);
+	}
 }
 
 function update(dt){
     slinky.update(dt);
+	for (var id in gameObjects){
+		gameObjects[id].update(dt);
+	}
 }

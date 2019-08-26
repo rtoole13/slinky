@@ -20,6 +20,7 @@ function handleMouseDown(e){
 
 function handleLeftClick(){
     console.log('Left click!');
+	slinky.releaseEndNode();
 }
 
 function handleRightClickDown(){

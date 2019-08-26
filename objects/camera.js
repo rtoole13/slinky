@@ -1,9 +1,16 @@
 class Camera{
-	constructor(x, y, orthographicSize){
+	constructor(x, y, isMain){
+		if (isMain){
+			if (Camera.instance){
+				return Camera.instance;
+			}
+			Camera.instance = this;
+		}
 		this.x = x;
 		this.y = y;
-		this.orthographicSize = orthographicSize;
 		this.trackedObject = null;
+
+		this.orthographicSize = canvas.height / 2;
 	}
 
 	zoom(targetOrthographicSize){
